@@ -8,14 +8,14 @@ def splitrange(r):
 def parse_orig(lines):
     return [[splitrange(r) for r in line.strip().split(',')] for line in lines]
 
-def parse(lines):
-    return [[ set(range(*[sum(z) for z in zip([0,1],[int(x) for x in r.split('-')]) ])) for r in line.strip().split(',')] for line in lines]
+def parse(lines, condition):
+    return len([(a,b) for a, b in [[ set(range(*[sum(z) for z in zip([0,1],[int(x) for x in r.split('-')]) ])) for r in line.strip().split(',')] for line in lines] if condition(a,b)])
 
 def part1(lines):
-    return len([(a,b) for a, b in parse(lines) if a.issubset(b) or b.issubset(a)])
+    return parse(lines, lambda a,b: a.issubset(b) or b.issubset(a))
 
 def part2(lines):
-    return len([(a,b) for a, b in parse(lines) if len(a.intersection(b)) > 0])
+    return parse(lines, lambda a,b: len(a.intersection(b)) > 0)
 
 class TestDay4(unittest.TestCase):
     def test_1a(self):
